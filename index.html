@@ -77,6 +77,71 @@
     </div>
 
     <script>
+// Inicializa o cliente Supabase
+const { createClient } = supabase;
+const supabaseClient = createClient('SUA_URL', 'SUA_KEY');
+
+// Função para Carregar Materiais da Tabela 'materiais'
+async function carregarMateriais() {
+    const { data, error } = await supabaseClient
+        .from('materiais')
+        .select('*')
+        .order('nome', { ascending: true });
+
+    if (error) {
+        console.error('Erro ao buscar:', error);
+        return;
+    }
+
+    const corpoTabela = document.getElementById('lista-materiais');
+    corpoTabela.innerHTML = data.map(item => `
+        <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.nome}</td>
+            <td class="px-6 py-4 text-sm text-gray-500">R$ ${item.preco_pago.toFixed(2)}</td>
+            <td class="px-6 py-4 text-sm text-gray-500">${item.medida_total} ${item.unidade}</td>
+            <td class="px-6 py-4 text-sm font-medium">
+                <button class="text-red-600 hover:text-red-900" onclick="deletarMaterial('${item.id}')">Excluir</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Função para Salvar Novo Material
+document.getElementById('form-material').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    
+    const novoMaterial = {
+        user_id: session?.user?.id, // Vincula ao usuário logado
+        nome: document.getElementById('nome').value,
+        preco_pago: parseFloat(document.getElementById('preco').value),
+        unidade: document.getElementById('unidade').value,
+        medida_total: parseFloat(document.getElementById('medida_total').value)
+    };
+
+    const { error } = await supabaseClient.from('materiais').insert([novoMaterial]);
+
+    if (!error) {
+        alert('Material salvo com sucesso!');
+        document.getElementById('modal-material').classList.add('hidden');
+        carregarMateriais();
+    } else {
+        alert('Erro ao salvar: ' + error.message);
+    }
+});
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+    carregarMateriais();
+    
+    // Lógica simples do Modal
+    document.getElementById('btn-abrir-modal').onclick = () => document.getElementById('modal-material').classList.remove('hidden', 'flex');
+    document.getElementById('btn-abrir-modal').classList.add('flex');
+    document.getElementById('btn-fechar-modal').onclick = () => document.getElementById('modal-material').classList.add('hidden');
+});
+
+
+        
         // Configuração do Supabase (Substitua pelas suas chaves do projeto vozesdooraculo)
         const supabaseUrl = 'https://lrbykdpwzixmgganirvo.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyYnlrZHB3eml4bWdnYW5pcnZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NjQ1MjUsImV4cCI6MjA3OTE0MDUyNX0.S92uWIyZqSyGbh0qsVwLYug3FcQ6psGRnpsPHDhHfog';
