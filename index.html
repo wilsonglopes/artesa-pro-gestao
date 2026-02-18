@@ -12,9 +12,9 @@
 <body class="bg-gray-50 text-stone-800">
 
     <div class="flex min-h-screen">
-        <aside class="w-64 bg-white shadow-md flex-shrink-0 hidden md:block">
+        <aside class="w-64 bg-white shadow-md flex-shrink-0 hidden md:block border-r border-gray-100">
             <div class="p-6">
-                <h2 class="text-xl font-bold text-hot-pink" style="color: #FF1493;">ArtesãPro</h2>
+                <h2 class="text-xl font-bold" style="color: #FF1493;">ArtesãPro</h2>
             </div>
             <nav class="mt-4">
                 <a href="#" class="flex items-center py-3 px-6 bg-rose-50 text-rose-600 border-r-4 border-rose-600 font-semibold">
@@ -31,124 +31,147 @@
 
         <main class="flex-1 p-8">
             <header class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold">Meu Inventário</h1>
-                <button id="btn-abrir-modal" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">Meu Inventário</h1>
+                    <p class="text-gray-500">Gerencie seus materiais e insumos</p>
+                </div>
+                <button id="btn-abrir-modal" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 px-6 rounded-lg transition shadow-lg shadow-rose-200">
                     + Novo Material
                 </button>
             </header>
 
-            <div class="bg-white rounded-xl shadow overflow-hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Material</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Preço Pago</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Unidade/Medida</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Material</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Preço Pago</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Unidade/Medida</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="lista-materiais" class="divide-y divide-gray-200">
+                    <tbody id="lista-materiais" class="divide-y divide-gray-100 bg-white">
                         </tbody>
                 </table>
             </div>
         </main>
     </div>
 
-    <div id="modal-material" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-xl p-8 max-w-md w-full">
-            <h2 class="text-xl font-bold mb-4">Cadastrar Insumo</h2>
+    <div id="modal-material" class="fixed inset-0 bg-stone-900/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Cadastrar Insumo</h2>
             <form id="form-material" class="space-y-4">
-                <input type="text" id="nome" placeholder="Nome do Material (ex: Feltro Rosa)" class="w-full p-2 border rounded" required>
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="number" step="0.01" id="preco" placeholder="Preço Pago (R$)" class="p-2 border rounded" required>
-                    <select id="unidade" class="p-2 border rounded">
-                        <option value="cm">Centímetros (cm)</option>
-                        <option value="metro">Metros (m)</option>
-                        <option value="unidade">Unidade</option>
-                    </select>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+                    <input type="text" id="nome" placeholder="Ex: Feltro Rosa Santa Fé" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" required>
                 </div>
-                <input type="number" id="medida_total" placeholder="Quantidade Total Comprada" class="w-full p-2 border rounded" required>
-                <div class="flex justify-end space-x-2 pt-4">
-                    <button type="button" id="btn-fechar-modal" class="text-gray-500 px-4 py-2">Cancelar</button>
-                    <button type="submit" class="bg-rose-600 text-white px-6 py-2 rounded font-bold">Salvar</button>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Preço (R$)</label>
+                        <input type="number" step="0.01" id="preco" placeholder="0,00" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Unidade</label>
+                        <select id="unidade" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                            <option value="cm">cm</option>
+                            <option value="metro">m</option>
+                            <option value="unidade">un</option>
+                            <option value="gramas">g</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Quantidade Comprada</label>
+                    <input type="number" id="medida_total" placeholder="Quantidade total" class="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:outline-none" required>
+                </div>
+                <div class="flex justify-end space-x-3 pt-6">
+                    <button type="button" id="btn-fechar-modal" class="text-gray-500 hover:text-gray-700 font-medium px-4 py-2 transition">Cancelar</button>
+                    <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white px-8 py-2 rounded-lg font-bold transition shadow-lg shadow-rose-200">Salvar Material</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-// Inicializa o cliente Supabase
-const { createClient } = supabase;
-const supabaseClient = createClient('SUA_URL', 'SUA_KEY');
-
-// Função para Carregar Materiais da Tabela 'materiais'
-async function carregarMateriais() {
-    const { data, error } = await supabaseClient
-        .from('materiais')
-        .select('*')
-        .order('nome', { ascending: true });
-
-    if (error) {
-        console.error('Erro ao buscar:', error);
-        return;
-    }
-
-    const corpoTabela = document.getElementById('lista-materiais');
-    corpoTabela.innerHTML = data.map(item => `
-        <tr class="hover:bg-gray-50">
-            <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.nome}</td>
-            <td class="px-6 py-4 text-sm text-gray-500">R$ ${item.preco_pago.toFixed(2)}</td>
-            <td class="px-6 py-4 text-sm text-gray-500">${item.medida_total} ${item.unidade}</td>
-            <td class="px-6 py-4 text-sm font-medium">
-                <button class="text-red-600 hover:text-red-900" onclick="deletarMaterial('${item.id}')">Excluir</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-// Função para Salvar Novo Material
-document.getElementById('form-material').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    
-    const novoMaterial = {
-        user_id: session?.user?.id, // Vincula ao usuário logado
-        nome: document.getElementById('nome').value,
-        preco_pago: parseFloat(document.getElementById('preco').value),
-        unidade: document.getElementById('unidade').value,
-        medida_total: parseFloat(document.getElementById('medida_total').value)
-    };
-
-    const { error } = await supabaseClient.from('materiais').insert([novoMaterial]);
-
-    if (!error) {
-        alert('Material salvo com sucesso!');
-        document.getElementById('modal-material').classList.add('hidden');
-        carregarMateriais();
-    } else {
-        alert('Erro ao salvar: ' + error.message);
-    }
-});
-
-// Inicialização
-document.addEventListener('DOMContentLoaded', () => {
-    carregarMateriais();
-    
-    // Lógica simples do Modal
-    document.getElementById('btn-abrir-modal').onclick = () => document.getElementById('modal-material').classList.remove('hidden', 'flex');
-    document.getElementById('btn-abrir-modal').classList.add('flex');
-    document.getElementById('btn-fechar-modal').onclick = () => document.getElementById('modal-material').classList.add('hidden');
-});
-
-
-        
-        // Configuração do Supabase (Substitua pelas suas chaves do projeto vozesdooraculo)
+        const { createClient } = supabase;
         const supabaseUrl = 'https://lrbykdpwzixmgganirvo.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyYnlrZHB3eml4bWdnYW5pcnZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NjQ1MjUsImV4cCI6MjA3OTE0MDUyNX0.S92uWIyZqSyGbh0qsVwLYug3FcQ6psGRnpsPHDhHfog';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const client = createClient(supabaseUrl, supabaseKey);
 
-        // Lógica para abrir/fechar modal e salvar dados
-        // (A ser complementada com as funções de INSERT e SELECT do Supabase)
+        async function carregarMateriais() {
+            const corpoTabela = document.getElementById('lista-materiais');
+            corpoTabela.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-400">Carregando materiais...</td></tr>';
+
+            const { data, error } = await client
+                .from('materiais')
+                .select('*')
+                .order('nome', { ascending: true });
+
+            if (error) {
+                console.error('Erro ao buscar:', error);
+                corpoTabela.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-red-500 text-sm">Erro ao carregar dados.</td></tr>';
+                return;
+            }
+
+            if (data.length === 0) {
+                corpoTabela.innerHTML = '<tr><td colspan="4" class="p-10 text-center text-gray-400 text-sm italic">Nenhum material cadastrado ainda.</td></tr>';
+                return;
+            }
+
+            corpoTabela.innerHTML = data.map(item => `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 text-sm font-semibold text-gray-900">${item.nome}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">R$ ${Number(item.preco_pago).toFixed(2)}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${item.medida_total} ${item.unidade}</td>
+                    <td class="px-6 py-4 text-sm font-medium text-right">
+                        <button onclick="deletarMaterial('${item.id}')" class="text-rose-400 hover:text-rose-700 p-2 transition">
+                            Excluir
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function deletarMaterial(id) {
+            if (!confirm('Deseja realmente excluir este material?')) return;
+            
+            const { error } = await client.from('materiais').delete().eq('id', id);
+            if (error) alert('Erro ao excluir: ' + error.message);
+            else carregarMateriais();
+        }
+
+        document.getElementById('form-material').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSubmit = e.target.querySelector('button[type="submit"]');
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = 'Salvando...';
+
+            const novoMaterial = {
+                nome: document.getElementById('nome').value,
+                preco_pago: parseFloat(document.getElementById('preco').value),
+                unidade: document.getElementById('unidade').value,
+                medida_total: parseFloat(document.getElementById('medida_total').value)
+            };
+
+            const { error } = await client.from('materiais').insert([novoMaterial]);
+
+            if (!error) {
+                document.getElementById('modal-material').classList.add('hidden');
+                e.target.reset();
+                carregarMateriais();
+            } else {
+                alert('Erro ao salvar: ' + error.message);
+            }
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = 'Salvar Material';
+        });
+
+        // Controle do Modal
+        const modal = document.getElementById('modal-material');
+        document.getElementById('btn-abrir-modal').onclick = () => modal.classList.replace('hidden', 'flex');
+        document.getElementById('btn-fechar-modal').onclick = () => modal.classList.replace('flex', 'hidden');
+
+        document.addEventListener('DOMContentLoaded', carregarMateriais);
     </script>
 </body>
 </html>
