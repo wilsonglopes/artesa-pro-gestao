@@ -93,6 +93,16 @@
     </div>
 
     <script>
+
+        // Adicione isso no início do script do seu index.html
+async function checkUser() {
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) {
+        window.location.href = 'login.html';
+    }
+}
+checkUser();
+        
         const { createClient } = supabase;
         const supabaseUrl = 'https://lrbykdpwzixmgganirvo.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyYnlrZHB3eml4bWdnYW5pcnZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NjQ1MjUsImV4cCI6MjA3OTE0MDUyNX0.S92uWIyZqSyGbh0qsVwLYug3FcQ6psGRnpsPHDhHfog';
