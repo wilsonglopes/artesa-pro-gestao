@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventário - Gestão Artesã</title>
+    <title>Inventário - ArtesãPro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -11,6 +11,7 @@
 </head>
 <body class="bg-gray-50 text-stone-800">
 
+    <div class="flex min-h-screen">
         <main class="flex-1 p-8">
             <header class="flex justify-between items-center mb-8">
                 <div>
@@ -74,22 +75,14 @@
         </div>
     </div>
 
+    <script src="menu.js"></script>
     <script>
-
-        // Adicione isso no início do script do seu index.html
-async function checkUser() {
-    const { data: { session } } = await client.auth.getSession();
-    if (!session) {
-        window.location.href = 'login.html';
-    }
-}
-checkUser();
-        
         const { createClient } = supabase;
         const supabaseUrl = 'https://lrbykdpwzixmgganirvo.supabase.co';
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxyYnlrZHB3eml4bWdnYW5pcnZvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM1NjQ1MjUsImV4cCI6MjA3OTE0MDUyNX0.S92uWIyZqSyGbh0qsVwLYug3FcQ6psGRnpsPHDhHfog';
         const client = createClient(supabaseUrl, supabaseKey);
 
+        // Função para carregar materiais (apenas do usuário logado)
         async function carregarMateriais() {
             const corpoTabela = document.getElementById('lista-materiais');
             corpoTabela.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-400">Carregando materiais...</td></tr>';
@@ -101,7 +94,6 @@ checkUser();
 
             if (error) {
                 console.error('Erro ao buscar:', error);
-                corpoTabela.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-red-500 text-sm">Erro ao carregar dados.</td></tr>';
                 return;
             }
 
@@ -126,19 +118,17 @@ checkUser();
 
         async function deletarMaterial(id) {
             if (!confirm('Deseja realmente excluir este material?')) return;
-            
             const { error } = await client.from('materiais').delete().eq('id', id);
-            if (error) alert('Erro ao excluir: ' + error.message);
-            else carregarMateriais();
+            if (!error) carregarMateriais();
         }
 
+        // Salvar Material vinculado ao Usuário Logado
         document.getElementById('form-material').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btnSubmit = e.target.querySelector('button[type="submit"]');
-            btnSubmit.disabled = true;
-            btnSubmit.innerText = 'Salvando...';
-
+            const { data: { session } } = await client.auth.getSession();
+            
             const novoMaterial = {
+                user_id: session.user.id, // Vínculo crucial
                 nome: document.getElementById('nome').value,
                 preco_pago: parseFloat(document.getElementById('preco').value),
                 unidade: document.getElementById('unidade').value,
@@ -154,23 +144,26 @@ checkUser();
             } else {
                 alert('Erro ao salvar: ' + error.message);
             }
-            btnSubmit.disabled = false;
-            btnSubmit.innerText = 'Salvar Material';
+        });
+
+        // Inicialização com Verificação de Segurança
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await client.auth.getSession();
+            
+            if (!session) {
+                window.location.href = 'login.html';
+            } else {
+                // Carrega o menu dinâmico
+                carregarMenu('inventario'); 
+                // Carrega os dados
+                carregarMateriais();
+            }
         });
 
         // Controle do Modal
         const modal = document.getElementById('modal-material');
         document.getElementById('btn-abrir-modal').onclick = () => modal.classList.replace('hidden', 'flex');
         document.getElementById('btn-fechar-modal').onclick = () => modal.classList.replace('flex', 'hidden');
-
-        document.addEventListener('DOMContentLoaded', carregarMateriais);
-
-        // No final do seu script existente, chame a função
-document.addEventListener('DOMContentLoaded', () => {
-    carregarMenu('inventario'); // Mude para 'calculadora' ou 'config' em cada página
-    carregarMateriais();
-});
-        
     </script>
 </body>
 </html>
